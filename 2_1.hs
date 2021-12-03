@@ -10,7 +10,7 @@ f (h,v) ("down", n)    = (h  ,v+n)
 main = print 
      . uncurry (*)
      . foldl f (0,0)
-     . map ((\[s,n] -> (s, read n :: Int)) . words)
+     . map ((\[s,n] -> (s, read n)) . words)
      . lines
      =<< readFile 
      =<< head <$> getArgs 

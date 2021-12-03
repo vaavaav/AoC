@@ -4,9 +4,9 @@ import System.Environment
 
 main = print
      . length
-     . filter (uncurry (<))
-     . (\l -> zip l (tail l))
-     . (\l -> zipWith3 (\a b c -> a+b+c) l (tail l) (tail $ tail l))
+     . filter (< 0)
+     . (\l@(_:t) -> zipWith (-)  l t)
+     . (\l@(_:h:t) -> zipWith3 (\a b c -> a+b+c) l (h:t) t)
      . map (read :: String -> Int)
      . lines
      =<< readFile 
