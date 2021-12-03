@@ -1,11 +1,10 @@
 import Data.List
 import System.Environment
 
-main = print
-     . length
-     . filter (< 0)
-     . (\l -> zipWith (-) l (tail l))
-     . map read 
-     . lines
-     =<< readFile 
-     =<< head <$> getArgs 
+solve = length 
+      . filter (<0)
+      . (\l -> zipWith (-) l (tail l))
+
+parse = map read . lines
+
+main = print . solve . parse =<< readFile =<< head <$> getArgs

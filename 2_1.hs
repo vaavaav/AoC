@@ -1,16 +1,14 @@
 import Data.List
-import System.Environment 
+import System.Environment
 
-f :: (Int,Int) -> (String, Int) -> (Int,Int)
-f (h,v) ("forward", n) = (h+n,v  )
-f (h,v) ("up", n )     = (h  ,v-n)
-f (h,v) ("down", n)    = (h  ,v+n)
+solve = product 
+      . map sum 
+      . transpose
 
+parse = map ((\[s,n] -> f (head s, read n)) . words) 
+      . lines
+      where f ('f', n) = [n, 0]
+            f ('u', n) = [0,-n]
+            f ('d', n) = [0, n]
 
-main = print 
-     . uncurry (*)
-     . foldl f (0,0)
-     . map ((\[s,n] -> (s, read n)) . words)
-     . lines
-     =<< readFile 
-     =<< head <$> getArgs 
+main = print . solve .  parse =<< readFile =<< head <$> getArgs 
