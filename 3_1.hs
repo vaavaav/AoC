@@ -1,18 +1,16 @@
 import Data.List
 import System.Environment 
+import Data.Char
 
 solve :: [[Int]] -> Int
 solve = product
-      . map sum
-      . transpose
-      . zipWith (\i l -> [2^i * mcb l, 2^i * lcb l]) [0..]
-      . reverse 
-      . transpose
-      where mcb l = fromEnum $ 2 * sum l >= length l
-            lcb l = 1 - mcb l
-            
+      . snd
+      . foldr (\l (i,[e,g]) -> (i+1, [e + mcb l i, g + lcb l i])) (0,[0,0])
+      . transpose 
+     where mcb l i = (2*sum l `div` length l)*2^i
+           lcb l i = (length l `div` (2 * sum l))*2^i      
 
 parse :: String -> [[Int]]
-parse = map (map (read . pure)) . lines
+parse = map (map digitToInt) . lines
 
 main = print . solve . parse =<< readFile =<< head <$> getArgs 
