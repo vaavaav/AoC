@@ -11,8 +11,8 @@ makeLine [[x1,y1],[x2,y2]]
      | x1 == x2  = zip (repeat x1) [y1,y'..y2]
      | y1 == y2  = zip [x1,x'..x2] (repeat y1)
      | otherwise = []
-    where x' = x1 + (2 * (fromEnum $ (maximum [x1,x2]) == x2 ) - 1)
-          y' = y1 + (2 * (fromEnum $ (maximum [y1,y2]) == y2 ) - 1)
+    where x' = x1 + (2 * (fromEnum $ (max x1 x2) == x2 ) - 1)
+          y' = y1 + (2 * (fromEnum $ (max y1 y2) == y2 ) - 1)
 
 
 solve :: [[[Int]]] -> Int
