@@ -1,23 +1,21 @@
 import Data.List
 import System.Environment 
 import Data.List.Split (splitOn)
-import Data.HashMap.Strict as H (singleton, insertWith, foldr, (!?), HashMap)
+import Data.HashMap.Strict as H (fromListWith, insertWith, (!?), HashMap, foldl)
+import Data.Maybe
 
-simulate :: Int -> Int -> HashMap Int Int -> HashMap Int Int
-simulate days d h
-         | days < d  = h
-         | otherwise = simulate days (d+1) $ maybe h (f h) (h !? d)  
-   where f h n = foldl (g n) h [d+9,d+16..days]
-         g n h d = insertWith (+) d n h 
-
-
-init_ :: Int -> [Int] -> HashMap Int Int
-init_ days x   = foldl g (singleton 0 $ length x) (concatMap f x)
-   where f a   = [a+1,a+8..days] 
-         g h a = insertWith (+) a 1 h
+simulate :: Int -> Int -> HashMap Int Int -> Int
+simulate d days h 
+         | d > days  = 0
+         | f == 0    = simulate (d+1) days h
+         | otherwise = f + simulate (d+1) days h' 
+   where h' = foldr (flip (insertWith (+)) f) h [d+9,d+16..days]
+         f = fromMaybe 0 (h !? d)     
 
 solve :: Int -> [Int] -> Int
-solve days = H.foldr (+) 0 . simulate days 1 . init_ days
+solve days = simulate (-8) days 
+           . fromListWith (+)
+           . (\l -> [(f-8,1) | f <- l])
 
 parse :: String -> [Int]
 parse = map read . splitOn ","
