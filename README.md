@@ -13,7 +13,7 @@ Open in bash
 $ stack ghci <challenge_part>.hs
 ```
 
-#### For challenge 1..5
+#### For challenge 1..5,7
 
 ```hs
 > :main <input_file_path>
