@@ -1,7 +1,8 @@
-# AoC2021
-Advent of Code - 2021
+# AoC : Advent of Code 
 
-## How to use
+## 2021
+
+### How to use
 
 Open in bash
 
@@ -9,13 +10,13 @@ Open in bash
 $ stack ghci <challenge_part>.hs
 ```
 
-### For challenge 1..5
+#### For challenge 1..5
 
 ```hs
 > :main <input_file_path>
 ```
 
-### For challenge 6
+#### For challenge 6
 
 ```hs
 > :main <number of days> <input_file_path>
