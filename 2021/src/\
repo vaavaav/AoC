@@ -1,0 +1,17 @@
+import Data.List
+import System.Environment 
+import Data.HashMap.Strict
+
+start :: [Int] -> HashMap (Int,Int) Int
+start x = fromList
+        $ zip [(l,c) | l <- ls, c <- cs] 
+        $ concat 
+ where (ls,cs) = (length x, length $ head x)
+
+solve :: [[Int]] -> Int
+solve = size . start
+        
+parse :: String -> [[Int]]
+parse = map (map read) . lines
+
+main = print . solve .  parse =<< readFile =<< head <$> getArgs 
