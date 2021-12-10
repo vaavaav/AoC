@@ -1,25 +1,19 @@
 import Data.List
 import System.Environment 
-import Data.HashMap.Strict (HashMap, size, fromList, (!?), (!), keys)
-import Data.Maybe
-import Data.Bool
-
+import Data.HashMap.Strict (filterWithKey, findWithDefault, HashMap, elems, fromList, (!?), (!))
 
 lowPoints :: HashMap (Int,Int) Int -> [Int]
-lowPoints h = foldr isLowPoint [] (keys h)
- where isLowPoint (l,c) p = bool p ((h ! (l,c)):p) 
-                          $ all (> (h ! (l,c)))
-                          $ catMaybes
-                          $ [h !? (l-1,c), h !? (l+1,c), h !? (l,c-1), h !? (l,c+1)] 
+lowPoints h = elems $ filterWithKey f h
+ where f (l,c) n = all (> n) 
+                 $ map (flip (findWithDefault 9) h)
+                 $ [(l-1,c),(l+1,c),(l,c-1),(l,c+1)]
+
+start :: [[Int]] -> HashMap (Int,Int) Int 
+start x = fromList $ zip [(l,c) | l <- [0..ls-1], c <- [0..cs-1]] $ concat x
+ where (ls,cs) = (length x, length $ head x)
 
 solve :: [[Int]] -> Int
-solve x = sum
-        $ map (+1)
-        $ lowPoints
-        $ fromList 
-        $ zip [(l,c) | l <- [0..ls-1], c <- [0..cs-1]]
-        $ concat x
- where (ls,cs) = (length x, length $ head x)
+solve = sum . map (+1) . lowPoints . start
         
 parse :: String -> [[Int]]
 parse = map (map (read . pure)) . lines
