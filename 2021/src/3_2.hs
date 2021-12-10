@@ -14,4 +14,4 @@ solve l = (rating mcd 0 l) * (rating lcd 0 l)
 parse :: String ->  [[Int]]
 parse = map (map (read . pure)) . lines
 
-main = print . solve . parse =<< readFile =<< head <$> getArgs 
+main = print . solve . parse =<< readFile . head =<< getArgs 

@@ -5,8 +5,7 @@ import Data.Maybe
 
 decode :: [String] -> [String] -> Int
 decode ns = foldl (\acc x -> (acc * 10) + x) 0 
-          . catMaybes 
-          . map (`elemIndex` ns)
+          . mapMaybe (`elemIndex` ns)
 
 toConfig :: [String] -> [String]
 toConfig [one,seven,four,a,b,c,d,e,f,eight] 
@@ -21,4 +20,4 @@ solve = foldr (\[i,o] a -> a + decode (toConfig $ sortOn length i) (map sort o))
         
 parse :: String -> [[[String]]]
 parse = map (map words . splitOn " | ") . lines
-main = print . solve . parse =<< readFile =<< head <$> getArgs 
+main = print . solve . parse =<< readFile . head =<< getArgs 

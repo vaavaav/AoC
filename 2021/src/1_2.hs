@@ -8,4 +8,4 @@ solve = length
      
 parse = map read . lines
 
-main = print . solve . parse =<< readFile =<< head <$> getArgs
+main = print . solve . parse =<< readFile . head =<< getArgs

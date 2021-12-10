@@ -1,6 +1,7 @@
 import Data.List
 import System.Environment 
-import Data.HashMap.Strict (keys, filterWithKey, findWithDefault, HashMap, fromList, (!?), (!))
+import Data.HashMap.Strict (HashMap, keys, filterWithKey, fromList, (!?))
+import Data.Maybe
 
 getBasinSize :: HashMap (Int,Int) Int -> [(Int,Int)] -> [(Int,Int)] -> Int
 getBasinSize _ _ [] = 0
@@ -9,18 +10,17 @@ getBasinSize h previous ((l,c):t)
              | otherwise = (1 +)
                          $ getBasinSize h ((l,c):previous)
                          $ (++) t
-                         $ filter (\c -> findWithDefault 9 c h < 9)
+                         $ filter ((< 9) . fromMaybe 9 . (h !?))
                          $ [(l-1,c),(l+1,c),(l,c-1),(l,c+1)] \\ (t ++ previous)
 
 basins :: HashMap (Int,Int) Int -> [Int]
 basins h = map (getBasinSize h [] . pure) $ keys $ filterWithKey f h
- where f (l,c) n = all ((> n) . flip (findWithDefault 9) h) [(l-1,c),(l+1,c),(l,c-1),(l,c+1)]
+ where f (l,c) n = all ((> n) . fromMaybe 9 . (h !?)) [(l-1,c),(l+1,c),(l,c-1),(l,c+1)]
 
 start :: [[Int]] -> HashMap (Int,Int) Int 
-start x = fromList $ zip [(l,c) | l <- [0..ls-1], c <- [0..cs-1]] $ concat x
- where (ls,cs) = (length x, length $ head x)
+start x = fromList [((l,c),e') | (l,e) <- zip [0..] x, (c,e') <- zip [0..] e]
 
--- solve :: [[Int]] -> Int
+solve :: [[Int]] -> Int
 solve = product . take 3 . reverse . sort . basins . start
         
 parse :: String -> [[Int]]

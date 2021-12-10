@@ -8,4 +8,4 @@ solve = length . filter ((`elem` [2,3,4,7]) . length)
 parse :: String -> [String]
 parse = concatMap (words . last . splitOn " | ") . lines
 
-main = print . solve .  parse =<< readFile =<< head <$> getArgs 
+main = print . solve .  parse =<< readFile . head =<< getArgs 

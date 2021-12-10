@@ -21,4 +21,4 @@ solve = H.size . H.filter (>1) . foldr (toHashmap . makeLine) H.empty
 parse :: String -> [[[Int]]]
 parse = map (map (map read . splitOn "," ) . splitOn " -> ") . lines
 
-main = print . solve . parse =<< readFile =<< head <$> getArgs 
+main = print . solve . parse =<< readFile . head =<< getArgs 

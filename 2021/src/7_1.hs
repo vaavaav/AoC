@@ -3,8 +3,7 @@ import System.Environment
 import Data.List.Split (splitOn)
 
 fuel :: Int -> [Int] -> Int 
-fuel x = foldr f 0
-  where f = (+) . abs . (x-)
+fuel x = foldr ((+) . abs . (x-)) 0
 
 optimum ::  Int -> Int -> [Int] -> Int 
 optimum min max l
@@ -19,4 +18,4 @@ solve l = optimum (minimum l) (maximum l) l
 parse :: String -> [Int]
 parse = map read . splitOn ","
 
-main = print . solve . parse =<< readFile =<< head <$> getArgs 
+main = print . solve . parse =<< readFile . head =<< getArgs 

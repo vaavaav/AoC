@@ -11,4 +11,4 @@ parse = map ((\[s,n] -> f (head s, read n)) . words)
             f ('u', n) = [0,-n]
             f ('d', n) = [0, n]
 
-main = print . solve .  parse =<< readFile =<< head <$> getArgs 
+main = print . solve .  parse =<< readFile . head =<< getArgs 

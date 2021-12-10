@@ -4,27 +4,27 @@ import Data.List.Split (splitOn)
 
 -- solving
 
-board_score :: [[Int]] -> Int
-board_score = sum . map pred . filter (>0) . concat
+boardScore :: [[Int]] -> Int
+boardScore = sum . map pred . filter (>0) . concat
 
-check_board :: [[Int]] -> Bool
-check_board b = not . null . filter (all (<0)) $ (b++bT) 
-            where bT = transpose b
+checkBoard :: [[Int]] -> Bool
+checkBoard b = any (all (< 0)) (b++bT) 
+  where bT = transpose b
 
 check :: [[[Int]]] -> [Int]
-check = map fst . filter (check_board . snd) . zip [0..]
+check = map fst . filter (checkBoard . snd) . zip [0..]
 
 play :: Int -> [[[Int]]] -> [[[Int]]] 
 play n = map $ map $ map (\x -> if x == n then -x else x)
 
 solve :: ([Int], [[[Int]]]) -> Int
-solve ((h:t),[b])
-     | check_board b' = (h-1) * board_score b' 
+solve ( h:t ,[b])
+     | checkBoard b' = (h-1) * boardScore b' 
      | otherwise = solve (t,[b'])
     where [b'] = play h [b]
-solve ((h:t), bs) = case check bs' of 
+solve ( h:t , bs) = case check bs' of 
      [] -> solve (t, bs')
-     l  -> solve (t, [b | (i,b) <- zip [0..] bs', not $ i `elem` l] )
+     l  -> solve (t, [b | (i,b) <- zip [0..] bs', i `notElem` l] )
     where bs' = play h bs 
 
 
@@ -34,19 +34,19 @@ solve ((h:t), bs) = case check bs' of
 -- Now, a marked number is a negative number
 -- Note: before scoring subtract 1 to all the number in the board.
 
-parse_numbers :: String -> [Int]
-parse_numbers = map (succ . read) 
+parseNumbers :: String -> [Int]
+parseNumbers = map (succ . read) 
               . splitOn "," 
               . head 
               . lines
 
-parse_boards :: String -> [[[Int]]]
-parse_boards = map (map (map (succ . read) . words)) 
+parseBoards :: String -> [[[Int]]]
+parseBoards = map (map (map (succ . read) . words)) 
              . splitOn [[]] 
              . drop 2 
              . lines
 
 parse :: String -> ([Int], [[[Int]]])
-parse s = (parse_numbers s, parse_boards s)
+parse s = (parseNumbers s, parseBoards s)
 
-main = print  . solve . parse =<< readFile =<< head <$> getArgs 
+main = print  . solve . parse =<< readFile . head =<< getArgs 

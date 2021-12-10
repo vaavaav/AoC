@@ -13,4 +13,4 @@ solve = product
 parse :: String -> [[Int]]
 parse = map (map digitToInt) . lines
 
-main = print . solve . parse =<< readFile =<< head <$> getArgs 
+main = print . solve . parse =<< readFile . head =<< getArgs 

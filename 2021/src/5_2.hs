@@ -15,9 +15,9 @@ makeLine [[x1,y1],[x2,y2]]
           y' = y1 + signum (y2-y1)
 
 solve :: [[[Int]]] -> Int
-solve = H.size . H.filter (>1) . foldr (toHashmap . makeLine) H.empty
+solve = size . H.filter (>1) . foldr (toHashmap . makeLine) H.empty
 
 parse :: String -> [[[Int]]]
 parse = map (map (map read . splitOn "," ) . splitOn " -> ") . lines
 
-main = print . solve . parse =<< readFile =<< head <$> getArgs 
+main = print . solve . parse =<< readFile . head =<< getArgs 

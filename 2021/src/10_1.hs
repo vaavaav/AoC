@@ -7,8 +7,6 @@ close '(' = ')'
 close '{' = '}'
 close '<' = '>'
 
-
-
 getCorrupted = map (\l@(h:_) -> span (/= close h) l)
 
 solve = getCorrupted  

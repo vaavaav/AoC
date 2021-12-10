@@ -13,4 +13,4 @@ solve = product
 parse = map ((\[s,n] -> (head s, read n)) . words)
       . lines
 
-main = print . solve . parse =<< readFile =<< head <$> getArgs 
+main = print . solve . parse =<< readFile . head =<< getArgs 
