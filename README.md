@@ -2,7 +2,7 @@
 
 |                                     | <br>1| <br>2| <br>3 | <br>4 | <br>5 | <br>6 | <br>7 | <br>8 | <br>9 | 1<br>0 | 1<br>1 | 1<br>2 | 1<br>3 | 1<br>4 | 1<br>5 | 1<br>6 | 1<br>7 | 1<br>8 | 1<br>9 | 2<br>0 | 2<br>1 | 2<br>2 | 2<br>3 | 2<br>4 | 2<br>5 |
 |:-:                                  | :-:  | :-:  |  :-:  |  :-:  |  :-:  |  :-:  |  :-:  |  :-:  |  :-:  |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |  :-:   |
-|[2021](https://adventofcode.com/2021)| ⭐  |  ⭐  |  ⭐  |   ⭐  |  ⭐  |   ⭐  |  ⭐  |   ⭐    |       |         |        |        |        |        |        |        |        |        |        |        |        |        |        |        |         |
+|[2021](https://adventofcode.com/2021)| ⭐  |  ⭐  |  ⭐  |   ⭐  |  ⭐  |   ⭐  |  ⭐  |   ⭐    |  ⭐     |         |   ⭐  |        |        |        |        |        |        |        |        |        |        |        |        |        |         |
   
 ---
 
@@ -19,16 +19,19 @@ Open in bash
 $ stack ghci <challenge_part>.hs
 ```
 
-#### For day 1..5,7
+then
 
 ```hs
 :main <input_file_path>
 ```
 
-#### For day 6
+#### Exceptions:
+
+- For day 6
+- For day 11 (Part 1)
 
 ```hs
-:main <number_of_days> <input_file_path>
+:main <number_of_steps> <input_file_path>
 ```
 
 ---
