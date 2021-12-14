@@ -1,34 +1,35 @@
 import Data.List
 import System.Environment 
-import Data.List.Split (splitOn, chunksOf)
+import Data.List.Split (splitOn)
 import Data.Bifunctor
-import Data.HashMap.Strict (HashMap, fromListWith, toList, empty)
+import Data.HashMap.Strict as H (HashMap, member, fromListWith, elems, union, singleton, foldrWithKey, (!), adjust, insertWith, delete, toList)
 
-subs :: [(String,Char)] -> (HashMap String Int,HashMap Char Int) -> (HashMap String Int,HashMap Char Int)
-subs l (s,c) = fromListWith (+) $ concatMap (f l) $ toList s
-  where f [] x = [x]
-        f ((h,o):t) x@(k@[a,b],v)
-          | h == k = [([a,o],v),([o,b],v)]
-          | otherwise = f t x  
+type Dict = HashMap Char (HashMap Char Int)
 
-step :: Int -> (HashMap String Int, HashMap Char Int) -> [(String,Char)] -> (HashMap String Int, HashMap Char Int)
-step n (s,c) l = iterate (subs l) (h,c) !! n
+subs :: [((Char,Char),Char)] -> Dict -> Dict
+subs l h = fst $ mapAccumL (f l) h (toList h)
+ where f [] h' e = (h', e) 
+       f (((a,b),c):t) h' e@(k,v)
+         | a == k && b `H.member` v = (g a c b (v ! b) h', (k,v))
+         | otherwise = f t h' e 
+       g a c b n = insertWith H.union c (singleton b n)
+                 . adjust (insertWith (+) c n . H.delete b) a
 
-start :: String -> (HashMap String Int, HashMap Char Int)
-start l@(h:t) = (s,c)
-  where s = fromListWith (+) $ zipWith (\a b -> ([a,b],1)) l t
-        c = fromListWith (+) $ (`zip` repeat 1) l
+step :: Int -> Dict -> [((Char,Char),Char)] -> Dict
+step n h l = iterate (subs l) h !! n
 
---solve :: Int -> (String, [(String,Char)]) -> Int
-solve n (s,l) = -- (\l -> maximum l - minimum l)
-              -- $ toList
-              snd
-              $ step n (start s)
+start :: String -> Dict
+start l@(_:t) = fromListWith H.union $ zip l $ map (`singleton` 1) (t ++ "\0")
 
+solve n = --(\l -> maximum l - minimum l)
+        -- . map length
+         elems
+        . uncurry (step n) 
+        . first start
 
-parse :: String -> (String, [(String,Char)])
+parse :: String -> (String, [((Char,Char),Char)])
 parse = bimap concat f . splitAt 1 . lines
  where f = map g . tail
-       g = (\[[a,b],[o]] -> ([a,b],o)) . splitOn " -> "  
+       g = (\[[a,b],[o]] -> ((a,b),o)) . splitOn " -> "  
 
 main = print =<< (\(n:f:t) -> solve (read n) . parse <$> readFile f) =<< getArgs
