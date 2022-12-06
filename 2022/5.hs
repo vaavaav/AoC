@@ -1,25 +1,22 @@
 import System.Environment
 import Data.List
 
+subs :: (Int, a) -> [a] -> [a]
+subs (i,x) l = let (before,(_:after)) = splitAt (i-1) l in before ++ [x] ++ after
 
-move :: (String -> String) -> Int -> Int -> Int -> [String] -> [String]
-move order n from to cargo = zipWith f [1..] cargo 
-    where f i e
-            | i == from = from' 
-            | i == to = (order transferred) ++ e
-            | otherwise = e 
-          (transferred,from') = splitAt n (cargo !! (from - 1))
-
+move :: (String -> String) -> [String] -> (Int,Int,Int) -> [String]
+move sort cargo (n,from,to) = subs (from, left) $ subs (to, to') cargo
+  where (transferred, left) = splitAt n (cargo !! (from - 1))
+        to' = (sort transferred) ++ (cargo !! (to - 1))
 ---
 
-solve :: ([String], [[String] -> [String]]) -> String
-solve = map head . uncurry (foldl (flip ($)))
+solve1 = map head . uncurry (foldl (($) . move reverse))
+
+solve2 = map head . uncurry (foldl (($) . move id))
 
 -- parse
 
-parse1 = parseCargo `split` (parseMoves $ move reverse) 
-
-parse2 = parseCargo `split` (parseMoves $ move id) 
+parse = parseCargo `split` parseMoves
 
 parseCargo = words
            . filter (`elem` (' ':['A'..'Z']))
@@ -28,14 +25,14 @@ parseCargo = words
            . takeWhile (']' `elem`) 
            . lines
 
-parseMoves f = map ((\[_,n,_,x,_,y] -> f (read n) (read x) (read y)) . words)
+parseMoves = map ((\[_,n,_,x,_,y] -> (read n,read x,read y)) . words)
            . drop 2
            . dropWhile (']' `elem`) 
            . lines
 
 -- 
 
-main = print . ((solve . parse1) `split` (solve . parse2)) =<< readFile . head =<< getArgs
+main = print . (solve1 `split` solve2) . parse =<< readFile . head =<< getArgs
 
 --- utils
 
